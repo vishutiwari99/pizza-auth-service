@@ -99,7 +99,6 @@ describe('POST  /auth/register', () => {
       // Assert
       const userRepository = connection.getRepository(User);
       const users = await userRepository.find();
-      console.log(users[0].password);
       expect(users[0].password).not.toBe(userData.password);
       expect(users[0].password).toHaveLength(60);
       expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
@@ -124,7 +123,7 @@ describe('POST  /auth/register', () => {
       expect(users).toHaveLength(1);
     });
 
-    // it.todo('should return an id of the current user', async () => {
+    // it('should return an id of the current user', async () => {
     //   const userData = {
     //     firstName: 'Vishu',
     //     lastName: 'Tiwari',
@@ -142,5 +141,19 @@ describe('POST  /auth/register', () => {
     // });
   });
 
-  describe('Fields are missing', () => {});
+  describe('Fields are missing', () => {
+    it('Should return 400 status code if email is missing', async () => {
+      const userData = {
+        firstName: 'Vaibhav',
+        lastName: 'Tiwari',
+        email: '',
+        password: 'secret',
+      };
+      // Act
+      const response = await request(app).post('/auth/register').send(userData);
+      const userRepository = connection.getRepository(User);
+      const users = await userRepository.find();
+      expect(users).toHaveLength(0);
+    });
+  });
 });
