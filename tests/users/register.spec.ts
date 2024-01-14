@@ -188,22 +188,22 @@ describe('POST  /auth/register', () => {
 
       expect(tokens).toHaveLength(1);
     });
-    // it('should return an id of the current user', async () => {
-    //   const userData = {
-    //     firstName: 'Vishu',
-    //     lastName: 'Tiwari',
-    //     email: 'vishutiwari99@gmail.com',
-    //     password: 'secret123',
-    //   };
-    //   // Act
-    //   const response = await request(app).post('/auth/register').send(userData);
-    //   // console.log('response', response.body);
-    //   expect(response.body).toHaveProperty('id');
-    //   const repository = connection.getRepository(User);
-    //   const users = await repository.find();
-    //   console.log('user', users);
-    //   expect((response.body as Record<string, string>).id).toBe(users[0].id);
-    // });
+    it('should return an id of the current user', async () => {
+      const userData = {
+        firstName: 'Vishu',
+        lastName: 'Tiwari',
+        email: 'vishutiwari99@gmail.com',
+        password: 'secret123',
+      };
+      // Act
+      const response = await request(app).post('/auth/register').send(userData);
+      // console.log('response', response.body);
+      expect(response.body).toHaveProperty('id');
+      const repository = connection.getRepository(User);
+      const users = await repository.find();
+      console.log('user', users);
+      expect((response.body as Record<string, string>).id).toBe(users[0].id);
+    });
   });
 
   describe('Fields are missing', () => {
