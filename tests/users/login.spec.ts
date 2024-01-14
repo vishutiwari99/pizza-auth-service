@@ -63,7 +63,7 @@ describe('POST  /auth/login', () => {
         }
       });
       // Assert
-      expect(response.statusCode).toBe(201);
+      expect(response.statusCode).toBe(200);
       expect(accessToken).not.toBeNull();
       expect(refreshToken).not.toBeNull();
       expect(isJwt(accessToken)).toBeTruthy();
