@@ -7,6 +7,7 @@ import { User } from '../../src/entity/User';
 import { Roles } from '../../src/constants';
 import { isJwt } from '../utils';
 import createJWKSMock from 'mock-jwks';
+import { response } from 'express';
 
 describe('GET  /auth/self', () => {
   let connection: DataSource;
@@ -62,6 +63,21 @@ describe('GET  /auth/self', () => {
         .set('Cookie', [`accessToken=${accessToken};`])
         .send();
       expect(response.body.id).toBe(data.id);
+    });
+    it('should return 401 status code if token does not exist', async () => {
+      const userData = {
+        firstName: 'Vaibhav',
+        lastName: 'Tiwari',
+        email: 'vishutiwari99@gmail.com',
+        password: 'secret123',
+      };
+      const userRepository = connection.getRepository(User);
+      await userRepository.save({
+        ...userData,
+        role: Roles.CUSTOMER,
+      });
+      const response = await request(app).get('/auth/self').send();
+      expect(response.statusCode).toBe(401);
     });
   });
 });
