@@ -5,6 +5,7 @@ import { AppDataSource } from '../../src/config/data-source';
 import { isJwt, truncateTables } from '../utils';
 import { User } from '../../src/entity/User';
 import { Roles } from '../../src/constants';
+import { RefreshToken } from '../../src/entity/RefreshToken';
 describe('POST  /auth/register', () => {
   let connection: DataSource;
   beforeAll(async () => {
@@ -160,6 +161,32 @@ describe('POST  /auth/register', () => {
 
       expect(isJwt(accessToken)).toBeTruthy();
       expect(isJwt(refreshToken)).toBeTruthy();
+    });
+    it('should store the refresh token in the database', async () => {
+      // Arrange
+      const userData = {
+        firstName: 'Rakesh',
+        lastName: 'K',
+        email: 'rakesh@mern.space',
+        password: 'password',
+      };
+
+      // Act
+      const response = await request(app).post('/auth/register').send(userData);
+
+      // Assert
+      const refreshTokenRepo = connection.getRepository(RefreshToken);
+      // const refreshTokens = await refreshTokenRepo.find();
+      // console.log(refreshTokens);
+
+      const tokens = await refreshTokenRepo
+        .createQueryBuilder('refreshToken')
+        .where('refreshToken.userId = :userId', {
+          userId: (response.body as Record<string, string>).id,
+        })
+        .getMany();
+
+      expect(tokens).toHaveLength(1);
     });
     // it('should return an id of the current user', async () => {
     //   const userData = {
