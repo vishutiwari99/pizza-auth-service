@@ -201,7 +201,6 @@ describe('POST  /auth/register', () => {
       expect(response.body).toHaveProperty('id');
       const repository = connection.getRepository(User);
       const users = await repository.find();
-      console.log('user', users);
       expect((response.body as Record<string, string>).id).toBe(users[0].id);
     });
   });
