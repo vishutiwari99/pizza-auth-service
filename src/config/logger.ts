@@ -3,6 +3,10 @@ import { Config } from '.';
 
 const logger = winston.createLogger({
   level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json(),
+  ),
   defaultMeta: {
     serviceName: 'auth-service',
   },
@@ -21,10 +25,7 @@ const logger = winston.createLogger({
     }),
     new winston.transports.Console({
       level: 'info',
-      format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json(),
-      ),
+
       silent: Config.NODE_ENV === 'test',
     }),
   ],
