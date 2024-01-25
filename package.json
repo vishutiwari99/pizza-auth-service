@@ -12,7 +12,8 @@
     "prepare": "husky install",
     "test": "jest --watch --runInBand --verbose",
     "start": "ts-node src/index.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate",
+    "migration:run": "typeorm-ts-node-commonjs migration:run"
   },
   "author": "Vaibhav Tiwari",
   "license": "ISC",
