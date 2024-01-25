@@ -94,30 +94,30 @@ describe('POST  /auth/login', () => {
 
       expect(response.statusCode).toBe(400);
     });
-    describe('Fields are missing', () => {
-      it('Should return 400 status code if email is missing', async () => {
-        const userData = {
-          firstName: 'Vaibhav',
-          lastName: 'Tiwari',
-          email: 'vishutiwari99@gmail.com',
-          password: 'secret123',
-        };
-        const hashedPassword = await bcrypt.hash(userData.password, 10);
-        const userRepository = connection.getRepository(User);
-        await userRepository.save({
-          ...userData,
-          password: hashedPassword,
-          role: Roles.CUSTOMER,
-        });
-        const user = {
-          email: 'vishutiwari99@gmail.com',
-          password: '',
-        };
-
-        // Act
-        const response = await request(app).post('/auth/login').send(user);
-        expect(response.statusCode).toBe(400);
+  });
+  describe('Fields are missing', () => {
+    it('Should return 400 status code if email is missing', async () => {
+      const userData = {
+        firstName: 'Vaibhav',
+        lastName: 'Tiwari',
+        email: 'vishutiwari99@gmail.com',
+        password: 'secret123',
+      };
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
+      const userRepository = connection.getRepository(User);
+      await userRepository.save({
+        ...userData,
+        password: hashedPassword,
+        role: Roles.CUSTOMER,
       });
+      const user = {
+        email: 'vishutiwari99@gmail.com',
+        password: '',
+      };
+
+      // Act
+      const response = await request(app).post('/auth/login').send(user);
+      expect(response.statusCode).toBe(400);
     });
   });
 });
