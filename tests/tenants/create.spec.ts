@@ -86,6 +86,31 @@ describe('POST  /tenants', () => {
       const tenants = await tenantRepository.find();
       expect(tenants).toHaveLength(0);
     });
+
+    it('should return 200', async () => {
+      const response = await request(app)
+        .get('/tenants')
+        .set('Cookie', [`accessToken=${adminToken}`]);
+      expect(response.statusCode).toBe(200);
+    });
+    it('should return list of tenants', async () => {
+      const tenantData = [
+        {
+          name: 'Tenant name',
+          address: 'Bilaspur Chhattisgarh',
+        },
+        {
+          name: 'Mausa JI',
+          address: 'Bilaspur Chhattisgarh',
+        },
+      ];
+      const tenantRepository = connection.getRepository(Tenant);
+      await tenantRepository.save(tenantData);
+      const response = await request(app)
+        .get('/tenants')
+        .set('Cookie', [`accessToken=${adminToken}`]);
+      expect(response.body).toHaveLength(2);
+    });
   });
   describe('Fields are missing', () => {});
 });

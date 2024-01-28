@@ -16,5 +16,11 @@ const tenantController = new TenantController(tentantService, logger);
 router.post('/', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
   tenantController.create(req, res, next),
 );
+router.get('/', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
+  tenantController.get(req, res, next),
+);
+router.get('/:id', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
+  tenantController.get(req, res, next),
+);
 
 export default router;
