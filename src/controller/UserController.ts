@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { UserService } from '../services/UserService';
 import { CreateUserRequest } from '../types';
 import { Roles } from '../constants';
@@ -18,6 +18,15 @@ export class UserController {
       res.status(201).json({ id: user.id });
     } catch (error) {
       next(error);
+    }
+  }
+  async getUserList(req: Request, res: Response, next: NextFunction) {
+    try {
+      const users = await this.userService.findAll();
+      res.status(200).json(users);
+    } catch (error) {
+      next(error);
+      return;
     }
   }
 }
