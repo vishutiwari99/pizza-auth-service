@@ -44,3 +44,9 @@ export interface ITenant {
 export interface CreateUserRequest extends Request {
   body: UserData;
 }
+
+export interface LimitedUserData {
+  firstName: string;
+  lastName: string;
+  role: string;
+}
