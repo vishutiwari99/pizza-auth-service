@@ -54,13 +54,53 @@ export class TenantController {
     }
   }
 
-  async get(req: Request, res: Response, next: NextFunction) {
+  async getAll(req: Request, res: Response, next: NextFunction) {
     try {
-      const tenant = await this.tenantService.get();
-      res.status(200).json(tenant);
-    } catch (error) {
-      next(error);
+      const tenants = await this.tenantService.getAll();
+
+      this.logger.info('All tenant have been fetched');
+      res.json(tenants);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async getOne(req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.params.id;
+
+    if (isNaN(Number(tenantId))) {
+      next(createHttpError(400, 'Invalid url param.'));
       return;
+    }
+
+    try {
+      const tenant = await this.tenantService.getById(Number(tenantId));
+
+      if (!tenant) {
+        next(createHttpError(400, 'Tenant does not exits.'));
+        return;
+      }
+
+      this.logger.info('Tenant have been fetched');
+      res.json(tenant);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  async destroy(req: Request, res: Response, next: NextFunction) {
+    const tenantId = req.params.id;
+
+    if (isNaN(Number(tenantId))) {
+      next(createHttpError(400, 'Invalid url param.'));
+      return;
+    }
+    try {
+      await this.tenantService.deleteById(Number(tenantId));
+      this.logger.info('All tenant have been fetched');
+      res.json({ id: Number(tenantId) });
+    } catch (err) {
+      next(err);
     }
   }
 }

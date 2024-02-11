@@ -15,5 +15,8 @@ const userController = new UserController(userService);
 router.post('/', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
   userController.create(req, res, next),
 );
+router.get('/', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
+  userController.getUserList(req, res, next),
+);
 
 export default router;

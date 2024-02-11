@@ -19,11 +19,12 @@ router.post('/', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
 router.patch('/:id', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
   tenantController.update(req, res, next),
 );
-router.get('/', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
-  tenantController.get(req, res, next),
+router.get('/', (req, res, next) => tenantController.getAll(req, res, next));
+router.get('/:id', (req, res, next) => tenantController.getOne(req, res, next));
+router.delete(
+  '/:id',
+  authenticate,
+  canAccess([Roles.ADMIN]),
+  (req, res, next) => tenantController.destroy(req, res, next),
 );
-router.get('/:id', authenticate, canAccess([Roles.ADMIN]), (req, res, next) =>
-  tenantController.get(req, res, next),
-);
-
 export default router;
