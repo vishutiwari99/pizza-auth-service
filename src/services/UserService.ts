@@ -7,7 +7,14 @@ import createHttpError from 'http-errors';
 export class UserService {
   constructor(private userRepository: Repository<User>) {}
 
-  async create({ firstName, lastName, email, password, role }: UserData) {
+  async create({
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+    tenantId,
+  }: UserData) {
     const user = await this.userRepository.findOne({ where: { email: email } });
     if (user) {
       const error = createHttpError(400, 'Email is already exists!');
@@ -24,6 +31,7 @@ export class UserService {
         email,
         password: hashedPassword,
         role: role,
+        tenant: tenantId ? { id: tenantId } : undefined,
       });
     } catch (err) {
       const error = createHttpError(
@@ -68,5 +76,9 @@ export class UserService {
 
   async getAll() {
     return await this.userRepository.find();
+  }
+
+  async deleteById(userId: number) {
+    return await this.userRepository.delete(userId);
   }
 }

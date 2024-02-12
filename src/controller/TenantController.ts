@@ -11,6 +11,11 @@ export class TenantController {
     private logger: Logger,
   ) {}
   async create(req: CreateTenantRequest, res: Response, next: NextFunction) {
+    // Validation
+    const result = validationResult(req);
+    if (!result.isEmpty()) {
+      return res.status(400).json({ errors: result.array() });
+    }
     const { name, address } = req.body;
     this.logger.debug('Request for creating a tenant', req.body);
     try {
