@@ -2,20 +2,29 @@ import request from 'supertest';
 import app from '../../src/app';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from '../../src/config/data-source';
-import { isJwt, truncateTables } from '../utils';
+import { isJwt } from '../utils';
 import { User } from '../../src/entity/User';
 import { Roles } from '../../src/constants';
 import { RefreshToken } from '../../src/entity/RefreshToken';
+import createJWKSMock from 'mock-jwks';
 describe('POST  /auth/register', () => {
   let connection: DataSource;
+  let jwks: ReturnType<typeof createJWKSMock>;
+
   beforeAll(async () => {
+    jwks = createJWKSMock('http://localhost:5501');
     connection = await AppDataSource.initialize();
   });
 
   beforeEach(async () => {
+    jwks.start();
     // Database truncate
     await connection.dropDatabase();
     await connection.synchronize();
+  });
+
+  afterEach(async () => {
+    jwks.stop();
   });
 
   afterAll(async () => {
@@ -53,6 +62,7 @@ describe('POST  /auth/register', () => {
       };
       // Act
       const response = await request(app).post('/auth/register').send(userData);
+      console.log('res', response.body);
 
       // Assert
       expect(response.statusCode).toBe(201);
